@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Publish new versions automatically after merge to main.
+- Validate release versions and verify the published package checksum.
+
 ## 0.1.0
 
 - Publish as `workspace-ssh-tools.remote-workspace-ssh` with a public source repository.
