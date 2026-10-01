@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Restrict publication credentials to the main branch deployment environment.
+- Publish the checked VSIX from a separate job.
+
 ## 0.1.1
 
 - Publish new versions automatically after merge to main.

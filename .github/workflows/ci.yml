@@ -38,8 +38,37 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
       - run: node scripts/release.cjs check
       - run: npm run package
-      - name: Publish to Open VSX
+      - uses: actions/upload-artifact@v4
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          name: extension-vsix
+          path: remote-workspace-ssh-*.vsix
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: open-vsx
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts --omit=dev
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: url.https://github.com/.insteadOf
+          GIT_CONFIG_VALUE_0: ssh://git@github.com/
+      - uses: actions/download-artifact@v4
+        with:
+          name: extension-vsix
+      - name: Publish to Open VSX
         run: node scripts/release.cjs publish
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
