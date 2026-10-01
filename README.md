@@ -78,6 +78,8 @@ Then run:
 ```sh
 npm ci --ignore-scripts
 npm run update:dts
+npm run lint:release
+npm run test:release
 npm run test:local
 npm run package
 ```
@@ -87,6 +89,22 @@ Packaging builds the production bundle. `test:local` covers proxy paths, script 
 ## Contributions and access
 
 The source is public: anyone can read it, fork it, or propose a pull request. Only the owner and explicitly authorized collaborators have direct write access. The maintainer decides which changes are merged. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Releases
+
+Changes to `main` must come through a pull request and pass the `verify` check. Carlos Almeida is the code owner and reviews contributions. Only his account has a review exception for merges through pull requests; the mandatory tests and PR requirement still apply to that account.
+
+Each pull request must increase the extension version. Before committing, run:
+
+```sh
+npm version patch --no-git-tag-version --ignore-scripts
+```
+
+Use `minor` or `major` when appropriate, and describe the change in `CHANGELOG.md`. This updates both `package.json` and `package-lock.json`. The pipeline rejects versions that have already been published or are older than the registry version.
+
+After merge, GitHub Actions runs the checks, builds the VSIX, and publishes it to Open VSX using the encrypted repository secret `OVSX_PAT`. The publish step runs only on pushes to `main`, never on pull requests. It waits for registry processing and verifies the downloaded package checksum. Rerunning an already published version does not upload it again.
+
+For a release problem, revert through a pull request and publish a higher version. Published versions cannot be overwritten. If registry processing was interrupted, rerun the failed workflow before making another release.
 
 ## Security and privacy
 

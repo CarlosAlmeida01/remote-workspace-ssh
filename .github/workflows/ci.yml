@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   pull_request:
+    branches: [main]
+
+concurrency:
+  group: extension-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -11,6 +16,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,5 +31,14 @@ jobs:
           GIT_CONFIG_KEY_0: url.https://github.com/.insteadOf
           GIT_CONFIG_VALUE_0: ssh://git@github.com/
       - run: npm run update:dts
+      - run: npm run lint:release
+      - run: npm run test:release
       - run: npm run test:local
+      - run: npm audit --omit=dev --audit-level=high
+      - run: node scripts/release.cjs check
       - run: npm run package
+      - name: Publish to Open VSX
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: node scripts/release.cjs publish
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
