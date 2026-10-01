@@ -52,6 +52,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: open-vsx
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,3 +74,13 @@ jobs:
         run: node scripts/release.cjs publish
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
+      - name: Create GitHub release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('node:fs');
+            const manifest = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            const bytes = fs.readFileSync(`${manifest.name}-${manifest.version}.vsix`);
+            const { publishGitHubRelease } = require('./scripts/github-release.cjs');
+            const url = await publishGitHubRelease({ github, context, manifest, bytes });
+            core.notice(`GitHub release: ${url}`);

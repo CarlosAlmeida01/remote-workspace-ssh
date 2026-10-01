@@ -2,7 +2,7 @@
   "name": "remote-workspace-ssh",
   "displayName": "Remote Workspace SSH",
   "description": "SSH workspace access with Windows proxy path fixes, Linux setup script normalization, and connection links.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "workspace-ssh-tools",
   "engines": {
     "vscode": "^1.70.2"
@@ -29,8 +29,8 @@
     "test:local": "vitest run test/proxy-command.test.ts test/script-template.test.ts test/connect-uri.test.ts",
     "update:dts": "npx --yes @vscode/dts@0.4.1 dev && npx --yes @vscode/dts@0.4.1 main",
     "package": "vsce package --no-dependencies",
-    "lint:release": "eslint --no-config-lookup --config eslint.release.config.mjs scripts/release.cjs test/release.test.cjs",
-    "test:release": "node --test test/release.test.cjs"
+    "lint:release": "eslint --no-config-lookup --config eslint.release.config.mjs scripts/*.cjs test/*.test.cjs",
+    "test:release": "node --test test/*.test.cjs"
   },
   "dependencies": {
     "@zokugun/is-it-type": "0.8.1",
