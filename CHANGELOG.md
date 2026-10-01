@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+- Check Git references before resolving release tags, including annotated tags.
+
 ## 0.1.3
 
 - Create GitHub Releases automatically after verified Open VSX publication.

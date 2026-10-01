@@ -2,7 +2,7 @@
   "name": "remote-workspace-ssh",
   "displayName": "Remote Workspace SSH",
   "description": "SSH workspace access with Windows proxy path fixes, Linux setup script normalization, and connection links.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "workspace-ssh-tools",
   "engines": {
     "vscode": "^1.70.2"

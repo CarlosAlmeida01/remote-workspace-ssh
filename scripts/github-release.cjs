@@ -32,7 +32,10 @@ async function publishGitHubRelease({ github, context, manifest, bytes, fetcher 
     }
     let taggedCommit;
     try {
-        taggedCommit = (await github.rest.repos.getCommit({ ...repo, ref: tag })).data.sha;
+        const reference = (await github.rest.git.getRef({ ...repo, ref: `tags/${tag}` })).data;
+        taggedCommit = reference.object.type === 'tag'
+            ? (await github.rest.repos.getCommit({ ...repo, ref: tag })).data.sha
+            : reference.object.sha;
     } catch (error) {
         if (error.status !== 404) { throw error; }
     }
