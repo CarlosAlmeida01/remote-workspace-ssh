@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const { execFileSync } = require('node:child_process');
 const semver = require('semver');
 
 const registry = 'https://open-vsx.org/api';
@@ -83,6 +84,14 @@ async function main() {
     const mode = process.argv[2];
     if (mode === 'check') {
         if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+            let baseRef = 'main';
+            if (process.env.GITHUB_EVENT_PATH) {
+                const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+                baseRef = event.pull_request?.base?.sha;
+                if (!/^[a-f0-9]{40}$/.test(baseRef || '')) { throw new Error('Invalid pull request base commit.'); }
+            }
+            const baseManifest = JSON.parse(execFileSync('git', ['show', `${baseRef}:package.json`], { cwd: root, encoding: 'utf8' }));
+            requireNewVersion(manifest, baseManifest);
             requireNewVersion(manifest, await getMetadata(manifest));
         }
         console.log(`Release version checked: ${manifest.version}`);

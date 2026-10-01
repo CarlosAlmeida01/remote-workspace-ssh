@@ -20,6 +20,11 @@ test('registry outages fail version validation instead of treating the version a
     await assert.rejects(getMetadata(manifest, '', async () => ({ ok: false, status: 503 })), /503/);
 });
 
+test('a version already in the pull request base fails even if the registry is behind', () => {
+    assert.doesNotThrow(() => requireNewVersion(manifest, { version: '0.1.0' }));
+    assert.throws(() => requireNewVersion(manifest, { version: '0.1.1' }), /Increase/);
+});
+
 test('missing credentials fail before any registry request', async () => {
     await assert.rejects(publish(manifest, Buffer.from('package'), '', {
         fetcher: () => { throw new Error('Must not request'); },
