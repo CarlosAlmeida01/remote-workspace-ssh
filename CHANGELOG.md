@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- Create GitHub Releases automatically after verified Open VSX publication.
+- Attach the checked VSIX and reject conflicting release tags or packages.
+
 ## 0.1.2
 
 - Restrict publication credentials to the main branch deployment environment.

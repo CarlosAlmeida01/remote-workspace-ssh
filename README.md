@@ -104,7 +104,9 @@ Use `minor` or `major` when appropriate, and describe the change in `CHANGELOG.m
 
 After merge, GitHub Actions runs the checks and builds the VSIX without publication credentials. A separate job publishes that checked artifact using `OVSX_PAT`, stored in the `open-vsx` environment. That environment permits only the `main` branch; working branches and pull requests cannot access its secret. Publication waits for registry processing and verifies the downloaded package checksum. Rerunning an already published version does not upload it again.
 
-For a release problem, revert through a pull request and publish a higher version. Published versions cannot be overwritten. If registry processing was interrupted, rerun the failed workflow before making another release.
+After Open VSX verification, the publication job creates a GitHub Release with the version tag, release notes, and the checked VSIX as an attachment. It publishes the release after uploading the asset. Reruns resume matching drafts and reject conflicting tags or artifacts. Only the main publication job has repository write permission, using the workflow's temporary GitHub token.
+
+For a release problem, revert through a pull request and publish a higher version. Published versions cannot be overwritten. If registry processing or release creation was interrupted, rerun the failed workflow before making another release.
 
 ## Security and privacy
 
