@@ -102,7 +102,7 @@ npm version patch --no-git-tag-version --ignore-scripts
 
 Use `minor` or `major` when appropriate, and describe the change in `CHANGELOG.md`. This updates both `package.json` and `package-lock.json`. The pipeline rejects versions that have already been published or are older than the registry version.
 
-After merge, GitHub Actions runs the checks, builds the VSIX, and publishes it to Open VSX using the encrypted repository secret `OVSX_PAT`. The publish step runs only on pushes to `main`, never on pull requests. It waits for registry processing and verifies the downloaded package checksum. Rerunning an already published version does not upload it again.
+After merge, GitHub Actions runs the checks and builds the VSIX without publication credentials. A separate job publishes that checked artifact using `OVSX_PAT`, stored in the `open-vsx` environment. That environment permits only the `main` branch; working branches and pull requests cannot access its secret. Publication waits for registry processing and verifies the downloaded package checksum. Rerunning an already published version does not upload it again.
 
 For a release problem, revert through a pull request and publish a higher version. Published versions cannot be overwritten. If registry processing was interrupted, rerun the failed workflow before making another release.
 
