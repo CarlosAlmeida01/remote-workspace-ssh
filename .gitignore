@@ -1,0 +1,12 @@
+node_modules/
+lib/
+out/
+.test/
+coverage/
+*.vsix
+*.tsbuildinfo
+vscode.d.ts
+vscode.proposed.*.d.ts
+.env
+.env.*
+.DS_Store

@@ -1,0 +1,11 @@
+*
+*/**
+**/.DS_Store
+!package.json
+!CHANGELOG.md
+!LICENSE.txt
+!README.md
+!lib/extension.js
+!resources/icon.png
+!src/scripts/**
+!THIRD_PARTY_NOTICES.txt
